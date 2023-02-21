@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bullet
+* source:	https://sketchfab.com/3d-models/bullet-8333d86fe2674aaf8888cc5fa4537d20
+* author:	RoutineStudio (https://sketchfab.com/TheRoutine)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bullet" (https://sketchfab.com/3d-models/bullet-8333d86fe2674aaf8888cc5fa4537d20) by RoutineStudio (https://sketchfab.com/TheRoutine) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
