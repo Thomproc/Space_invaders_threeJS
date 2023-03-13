@@ -5,7 +5,6 @@ const pi = Math.PI;
 
 class Bullet {
     #scene
-    #loop
     #mesh
 
     #maxDepth = config.world.size.depth;
@@ -13,11 +12,10 @@ class Bullet {
                         //Cela permet d'attendre qu'elle soit rendue une première fois avant de mettre à jour sa position.
     #radius = 0.1
     #speed
-    #dammage
+    #damage
     
-    constructor(scene, loop, position, speed, dammage){
+    constructor(scene, position, speed, damage){
         this.#scene = scene;
-        this.#loop = loop;
         const geometry = new THREE.SphereGeometry(this.#radius, 16, 16);
         const material = new THREE.MeshStandardMaterial({
             color: 0xffd700,
@@ -29,26 +27,23 @@ class Bullet {
         this.#scene.add(this.#mesh);
 
         this.#speed = speed;
-        this.#dammage = dammage;
-        this.#loop.addUpdatable(this);
+        this.#damage = damage;
     }
 
-    tick(index){
-        if(this.outOfWord()){
-            this.delete(index);
-        }
-        else{
-            this.#secondTick ? this.#mesh.position.z += this.#speed : this.#secondTick = true;
-        }
+    tick(delta){
+        this.#secondTick ? this.#mesh.position.z += this.#speed : this.#secondTick = true;
     }
 
-    outOfWord(){
+    outOfWorld(){
         return this.#mesh.position.z > this.#maxDepth;
     }
 
-    delete(index){
-        this.#scene.remove(this.#mesh);
-        this.#loop.removeUpdatable(index);
+    getDamage(){
+        return this.#damage;
+    }
+
+    getMesh(){
+        return this.#mesh;
     }
 }
 

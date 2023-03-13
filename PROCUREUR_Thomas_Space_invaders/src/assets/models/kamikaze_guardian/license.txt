@@ -1,0 +1,11 @@
+Model Information:
+* title:	Kamikaze Guardian
+* source:	https://sketchfab.com/3d-models/kamikaze-guardian-2e33a2d056d64e8ca259b14f4d05f77f
+* author:	guillaume.biju-duval (https://sketchfab.com/guillaume.biju-duval)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Kamikaze Guardian" (https://sketchfab.com/3d-models/kamikaze-guardian-2e33a2d056d64e8ca259b14f4d05f77f) by guillaume.biju-duval (https://sketchfab.com/guillaume.biju-duval) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

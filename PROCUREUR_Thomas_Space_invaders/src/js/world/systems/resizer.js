@@ -37,7 +37,7 @@ class Resizer {
       }, delay);
   }
 
-  #onResize() { }
+  #onResize() {  }
 }
 
 export { Resizer };

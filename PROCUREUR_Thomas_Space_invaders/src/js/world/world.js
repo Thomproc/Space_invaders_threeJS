@@ -11,6 +11,7 @@ import { Loop } from './systems/loop.js';
 import { Resizer } from './systems/resizer';
 import { createControls } from './systems/controls.js';
 import { EntitiesManager } from './systems/entitiesManager.js';
+import { LevelsManager } from './systems/levelsManager.js';
 import { Models } from './entities/models.js';
 import { Events } from './systems/events.js';
 
@@ -25,6 +26,7 @@ class World {
   #models
   #events
   #entitiesManager
+  #levelsManager
 
   constructor(container) {
     this.#scene = createScene();
@@ -34,24 +36,34 @@ class World {
     container.append(this.#renderer.domElement);
 
     this.#events = new Events(container); // Permet d'ajouter des évènements sur le container
-    this.#camerasManager = new CamerasManager(this.#events);
+    this.#camerasManager = new CamerasManager();
     this.#resizer = new Resizer(container, this.#events, this.#scene, this.#camerasManager, this.#renderer);
-    //this.#controls = createControls(this.#camera, this.#renderer.domElement);
     this.#loop = new Loop(this.#camerasManager, this.#scene, this.#renderer);
     
     this.#models = new Models(); // Gère les modèles 3D à importer
     this.#entitiesManager = new EntitiesManager(this.#scene, this.#models, this.#events, this.#loop, this.#camerasManager); // Gère les entités du jeu
+    this.#levelsManager = new LevelsManager(this.#scene, this.#loop, this.#entitiesManager);
 
+    this.#events.addEvent(
+      "keypress", 
+      e => {
+          if(e.key === "c") {
+              this.#camerasManager.switchCamera();
+              this.#resizer.resize();
+          }
+      }
+    );
+    createControls(this.#camerasManager.getCurrentCamera(), container);
     //ADD HELPERS
-    let size = 15;
+    let size = 50;
     let divisions = 15;
     this.#scene.add(new THREE.GridHelper(size, divisions));
-    // this.#scene.add(new THREE.AxesHelper(10));
+    this.#scene.add(new THREE.AxesHelper(10));
   }
 
   async init() {
     await this.#models.loadModels();
-    this.#entitiesManager.createShip();
+    this.#levelsManager.gameStart();
   }
 
   start() {

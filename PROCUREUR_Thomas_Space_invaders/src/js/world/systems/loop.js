@@ -42,6 +42,7 @@ class Loop {
   }
   
   pauseResume() {
+    console.log(this.#updatables)
     this.#paused ? this.resume() : this.pause();
   }
   
@@ -50,9 +51,9 @@ class Loop {
     this.#updatables = [...new Set(this.#updatables)]; // remove duplicate objects
   }
   
-  removeUpdatable(index){
-    this.#updatables.splice(index, 1);
-  }
+  // removeUpdatable(index){
+  //   this.#updatables.splice(index, 1);
+  // }
 
   tick() {
     if (this.#paused) return;
@@ -65,8 +66,8 @@ class Loop {
     // );
 
     
-    this.#updatables.forEach((object, index) => {
-      object.tick(index);
+    this.#updatables.forEach((object) => {
+      object.tick(delta);
     });
   }
 }

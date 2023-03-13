@@ -1,27 +1,17 @@
 import * as THREE from 'three';
 
 class CamerasManager{
-    #events
     #cameras = []
     #currentCameraIndex
     #currentCamera
 
-    #fov = 50
+    #fov = 40
     #near = 0.1
-    #far = 100
+    #far = 500
 
-    constructor(events) {
-        this.#events = events;
-        this.#currentCamera = this.createCamera(new THREE.Vector3(0, 3, -11), new THREE.Vector3(0, 0, 100));
+    constructor() {
+        this.#currentCamera = this.createCamera(new THREE.Vector3(0, 6, -17), new THREE.Vector3(0, 0, 100));
         this.#currentCameraIndex = this.addCamera(this.#currentCamera);
-        this.#events.addEvent(
-            "keypress", 
-            e => {
-                if(e.key === "c") {
-                    this.switchCamera();
-                }
-        }
-        );
     }
 
     createCamera(position, target) {
