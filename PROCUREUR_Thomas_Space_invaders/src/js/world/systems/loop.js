@@ -5,16 +5,20 @@ class Loop {
   #cameraManager
   #scene
   #renderer
+  #composer
   #paused
   #updatables
   #clock
 
-  constructor(cameraManager, scene, renderer) {
+  #glitchEffect = false
+
+  constructor(cameraManager, scene, renderer, composer) {
     this.#cameraManager = cameraManager;
     this.#scene = scene;
     this.#renderer = renderer;
+    this.#composer = composer;
     this.#updatables = [];
-    this.#paused = false;
+    this.#paused = true;
     this.#clock = new Clock();
   }
 
@@ -24,7 +28,13 @@ class Loop {
       this.tick();
 
       // render a frame
-      this.#renderer.render(this.#scene, this.#cameraManager.getCurrentCamera());
+      if(this.#glitchEffect){
+        this.#composer.render();
+      }
+      else {
+        this.#renderer.render(this.#scene, this.#cameraManager.getCurrentCamera());
+      }
+
     });
   }
 
@@ -35,6 +45,10 @@ class Loop {
   pause() {
     this.#paused = true;
   }
+
+  isPaused(){
+    return this.#paused;
+  }
   
   resume() {
     this.#paused = false;
@@ -42,7 +56,7 @@ class Loop {
   }
   
   pauseResume() {
-    console.log(this.#updatables)
+    console.log(this.#updatables);
     this.#paused ? this.resume() : this.pause();
   }
   
@@ -50,10 +64,6 @@ class Loop {
     this.#updatables.push(...objects3d);
     this.#updatables = [...new Set(this.#updatables)]; // remove duplicate objects
   }
-  
-  // removeUpdatable(index){
-  //   this.#updatables.splice(index, 1);
-  // }
 
   tick() {
     if (this.#paused) return;
@@ -69,6 +79,13 @@ class Loop {
     this.#updatables.forEach((object) => {
       object.tick(delta);
     });
+  }
+
+  displayGlitchEffect(){
+    this.#glitchEffect = true;
+    setTimeout(() => {
+      this.#glitchEffect = false;
+    }, 500);
   }
 }
 

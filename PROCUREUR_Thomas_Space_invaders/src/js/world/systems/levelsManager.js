@@ -2,27 +2,38 @@ class LevelsManager {
     #scene
     #loop
     #entitiesManager
+    #IHM
 
     #level
+    #gameIsOn = false
 
-    constructor(scene, loop, entitiesManager){
+    constructor(scene, loop, entitiesManager, IHM){
         this.#scene = scene;
         this.#loop = loop;
         this.#entitiesManager = entitiesManager;
+        this.#IHM = IHM;
 
         this.#loop.addUpdatable(this);
     }
 
-    gameStart(){
+    async gameStart(){
         this.#level = 1;
-        this.#entitiesManager.createShip();
+        await this.transition();
+        this.#entitiesManager.createShields();
         this.#entitiesManager.createArmy(this.#level);
+        this.#entitiesManager.gameStart();
+        this.#gameIsOn = true;
     }
 
     tick(){
+        if(!this.#gameIsOn){
+            return
+        }
         if(this.#entitiesManager.enemiesDied()){
+            this.#loop.pause();
             this.#level++;
-            console.log("level up !", this.#level);
+            this.transition();
+            this.#entitiesManager.createShields();
             this.#entitiesManager.createArmy(this.#level);
         }
         else if(this.#entitiesManager.shipDied()){
@@ -30,13 +41,19 @@ class LevelsManager {
         }
     }
 
-    buildLevel(){
-
+    async transition(){
+        await this.#IHM.showInformation("Level " + this.#level);
+        setTimeout(
+            () => {
+                this.#IHM.hideInformation();
+                this.#loop.resume();
+                this.#entitiesManager.setArmyShot();
+            }, 2000
+        );
     }
 
     gameOver(){
-        this.#loop.pauseResume();
-        console.log("you died...");
+        this.#gameIsOn = false;
     }
 }
 

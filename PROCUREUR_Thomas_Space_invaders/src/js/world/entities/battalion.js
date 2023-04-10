@@ -1,66 +1,82 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 import { Enemy } from './enemy'
 import { config } from './config'
 
-const collisionBox = new THREE.Box3();
+const battalionBox = new THREE.Box3();
 
 class Battalion {
     #scene
     #models
-    #battalionConfig
+    #sounds
+    #IHM
+    #battalionTypes
     
     #battalionGroup = new THREE.Group()
     #enemies = []
 
-    constructor(scene, models, battalionConfig){
+
+    constructor(scene, models, sounds, IHM, battalionTypes){
         this.#scene = scene;
         this.#models = models;
-        this.#battalionConfig = battalionConfig;
-        console.log(this.#battalionConfig)
+        this.#sounds = sounds;
+        this.#IHM = IHM;
+        this.#battalionTypes = battalionTypes;
+
         this.buildBattalion();
     }
 
     buildBattalion(){
-        const nbBattalion = this.#battalionConfig.nbBattalions; 
-        const nbEnemies = this.#battalionConfig.nbEnemies;
-        const enemyType = this.#battalionConfig.enemiesType;
+        const nbEnemies = this.#battalionTypes.length;
+        const enemyWidthSize = this.#models.getEnemySize();
+        const enemiesWidthSize = enemyWidthSize * nbEnemies; // Somme des largeurs des ennemis pour déterminer ensuite leur espacement
+        
+        // Calcule de l'espacement en largeur entre les ennemis
+        const spaceAvailable = config.world.size.width / 1.5;
+        const enemiesSpacingWidth = (spaceAvailable - enemiesWidthSize) / (nbEnemies + 1);
+
         const enemyPosition = new THREE.Vector3();
-        for (let i = 0; i < nbEnemies; i++){
+        
+        // Création des ennemies et calcule de la largeur qu'ils prennent en étant collés
+        for (let i = 0; i < nbEnemies; i++) {
+            const enemyType = this.#battalionTypes[i];
+            if(enemyType == null){
+                continue;
+            }
             const enemyDatas = this.#models.getEnemy(enemyType);
-            const newEnemy = new Enemy(this.#scene, enemyDatas, enemyType);
-
-            const enemiesSpacingWidth = (config.world.size.width - nbEnemies * enemyDatas.size.x) / (nbEnemies + 1);
-            const enemiesSpacingDepth = (config.world.size.depth / 2 - nbBattalion * enemyDatas.size.z) / (nbBattalion + 1)
-            const enemyPosX = enemyDatas.size.x / 2 + enemiesSpacingWidth + i * (enemiesSpacingWidth + enemyDatas.size.x) - config.world.size.width / 2;
-            const enemyPosZ = enemyDatas.size.z / 2 + this.#battalionConfig.index * enemiesSpacingDepth + config.world.size.depth / 2;
-            enemyPosition.set(enemyPosX, 0, enemyPosZ);
+            const newEnemy = new Enemy(this.#scene, this.#sounds, this.#IHM, enemyDatas, enemyType);
+            
+            // On calcule la position de l'ennemi
+            const enemyPosX = enemyWidthSize / 2 + enemiesSpacingWidth + i * (enemiesSpacingWidth + enemyWidthSize) - spaceAvailable / 2;
+            enemyPosition.set(enemyPosX, 0, 0);
             newEnemy.setPosition(enemyPosition);
-
+            
             this.#enemies.push(newEnemy);
             this.#battalionGroup.add(newEnemy.getModel());
         }
     }
 
-    tick(delta){
+    addPointsToEnemies(){
         this.#enemies.forEach(enemy => {
-            enemy.tick(delta);
+            enemy.addPoint();
         });
     }
 
-    collisionWithEnemy(bulletSphere, damage){
-        collisionBox.setFromObject(this.#battalionGroup);
-        // const collisionBoxHelper = new THREE.Box3Helper(collisionBox, 0xffff00);
-        // this.#scene.add(collisionBoxHelper);
-        if(collisionBox.intersectsSphere(bulletSphere)){
-            console.log("bataillon touché ");
+    tick(delta){
+        for (let index = 0; index < this.#enemies.length; index++) {
+            const enemy = this.#enemies[index];
+            enemy.tick(delta);
+            if(enemy.isDead()){
+                this.#enemies.splice(index, 1);
+            }
+        }
+    }
+
+    collisionWithEnemy(hitContainer, damage){
+        battalionBox.setFromObject(this.#battalionGroup);
+        if(hitContainer instanceof THREE.Box3 && battalionBox.intersectsBox(hitContainer) || hitContainer instanceof THREE.Sphere && battalionBox.intersectsSphere(hitContainer)){
             for (let index = 0; index < this.#enemies.length; index++) {
                 const enemy = this.#enemies[index];
-                // console.log("\t+++ Ennemie", index, "+++");
-                if(enemy.collisionWithEnemy(bulletSphere, damage)){
-                    //supprimer l'ennemi du bataillon : groupe et liste !!
-                    if(enemy.getHealth() <= 0){
-                        this.deleteEnemy(enemy, index)
-                    }
+                if(!enemy.isDying() && enemy.collisionWithEnemy(hitContainer, damage)){
                     return true;
                 }
             }
@@ -68,8 +84,27 @@ class Battalion {
         return false;
     }
 
-    enemiesDied(){
+    // Un bataillon est en train de mourir si tous les enemis qui le composent sont en train de mourir
+    isDying(){
+        for (let index = 0; index < this.#enemies.length; index++) {
+            const enemy = this.#enemies[index];
+            if(!enemy.isDying()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    isDead(){
         return this.#enemies.length == 0;
+    }
+
+////Getters et setters
+    getSize(){
+        const groupSize = new THREE.Vector3();
+        battalionBox.setFromObject(this.#battalionGroup);
+        battalionBox.getSize(groupSize);
+        return groupSize;
     }
 
     getEnemies(){
@@ -80,10 +115,13 @@ class Battalion {
         return this.#battalionGroup;
     }
 
-    deleteEnemy(enemy, index){
-        this.#battalionGroup.remove(enemy.getModel());
-        this.#enemies.splice(index, 1);
-        this.#scene.remove(enemy.getModel());
+    getPosition(){
+        return this.#battalionGroup.position;
+    }
+
+    setPosition(newPosition){
+        this.#battalionGroup.position.copy(newPosition);
+        return;
     }
 }
 
