@@ -1,19 +1,29 @@
 class SoundManager{
-    // Player sounds
+    #ambienceMusic
+    #gameOver
+
+    // Sons du vaisseau
     #shipShot
     #shipTransformation
     #shipHitSound
 
-    // Shields sounds
+    // Sons des boucliers
     #hitMetal
 
-    // Enemy sounds
+    // Sons des ennemis
     #enemyShot
     #enemyHit
     #enemyDying
 
-
     constructor(){
+        this.#ambienceMusic = new Audio('src/js/assets/media/ambience.mp3');
+        this.#ambienceMusic.load();
+        this.#ambienceMusic.loop = true;
+
+        this.#gameOver = new Audio('src/js/assets/media/gameOver.mp3');
+        this.#gameOver.load();
+
+        // Sons du vaisseau
         this.#shipShot = new Audio('src/js/assets/media/shipShot.mp3');
         this.#shipShot.load();
 
@@ -21,24 +31,40 @@ class SoundManager{
         this.#shipTransformation.load();
         this.#shipTransformation.playbackRate = 1.85;
 
+        // Sons des boucliers
         this.#shipHitSound = new Audio('src/js/assets/media/shipHit.mp3');
         this.#shipHitSound.load();
 
+        // Sons des ennemis
         this.#hitMetal = new Audio('src/js/assets/media/hit_metal.mp3');
         this.#hitMetal.load();
         this.#hitMetal.volume = 0.75;
         
         this.#enemyShot = new Audio('src/js/assets/media/enemyShot.mp3');
         this.#enemyShot.load();
-        this.#enemyShot.volume = 0.25;
+        this.#enemyShot.volume = 0.20;
 
         this.#enemyHit = new Audio('src/js/assets/media/enemyHit.mp3')
         this.#enemyHit.load();
-        // this.#enemyHit.volume = ;
 
         this.#enemyDying = new Audio('src/js/assets/media/enemyDying.mp3');
         this.#enemyDying.load();
-        this.#enemyDying.volume = 0.15;
+    }
+
+    ambienceMusic(play){
+        if(play){
+            this.#ambienceMusic.pause();
+            this.#ambienceMusic.currentTime = 0;
+            this.#ambienceMusic.play();
+        }
+        else {
+            this.#ambienceMusic.pause();
+        }
+    }
+
+    enableOrDisableAmbienceMusic(){
+        this.ambienceMusic(this.#ambienceMusic.paused);
+        return !this.#ambienceMusic.paused;
     }
 
     shipShotSound(play){
@@ -49,7 +75,6 @@ class SoundManager{
         }
         else {
             this.#shipShot.pause();
-            this.#shipShot.currentTime = 0;
         }
     }
 
@@ -63,6 +88,12 @@ class SoundManager{
         this.#shipHitSound.pause();
         this.#shipHitSound.currentTime = 0;
         this.#shipHitSound.play();
+    }
+
+    gameOverSound(){
+        this.#gameOver.pause();
+        this.#gameOver.currentTime = 0;
+        this.#gameOver.play();
     }
 
     metalSound(){
@@ -79,7 +110,6 @@ class SoundManager{
         }
         else {
             this.#enemyShot.pause();
-            this.#enemyShot.currentTime = 0;
         }
     }
 
@@ -94,74 +124,6 @@ class SoundManager{
         this.#enemyDying.currentTime = 0;
         this.#enemyDying.play();
     }
-    
 }
 
 export { SoundManager }
-
-// class SoundManager {
-//     constructor() {
-//         this.context = new AudioContext();
-//         this.sounds = new Map();
-//         this.loadSounds();
-//     }
-
-//     async loadSounds() {
-//         const files = ['src/js/assets/media/shipShot.mp3', 'src/js/assets/media/shipTransformation.mp3', 'src/js/assets/media/shipHit.mp3', 'src/js/assets/media/hit_metal.mp3', 'src/js/assets/media/enemyShot.mp3', 'src/js/assets/media/enemyDying.mp3'];
-
-//         for (const file of files) {
-//             const response = await fetch(file);
-//             const arrayBuffer = await response.arrayBuffer();
-//             const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
-//             this.sounds.set(file, audioBuffer);
-//         }
-//     }
-
-//     playSound(file) {
-//         const source = this.context.createBufferSource();
-//         source.buffer = this.sounds.get(file);
-//         source.connect(this.context.destination);
-//         source.start();
-//     }
-
-//     shipShotSound(play){
-//         if(play){
-//             this.playSound('src/js/assets/media/shipShot.mp3');
-//         }
-//         // else {
-//         //     this.#shipShot.pause();
-//         // }
-//     }
-
-//     shipTransformationSound(){
-//         // this.#shipTransformation.pause();
-//         // this.#shipTransformation.currentTime = 0;
-//         // this.#shipTransformation.play();
-//     }
-
-//     shipHitSound(){
-//         // this.#hitSound.pause();
-//         // this.#hitSound.currentTime = 0;
-//         // this.#hitSound.play();
-//     }
-
-//     metalSound(){
-//         // this.#hitMetal.pause();
-//         // this.#hitMetal.currentTime = 0;
-//         // this.#hitMetal.play();
-//     }
-
-//     enemyShotSound(){
-//         // this.#enemyShot.pause();
-//         // this.#enemyShot.currentTime = 0;
-//         // this.#enemyShot.play();
-//     }
-
-//     enemyDyingSound(){
-//         // this.#enemyDying.pause();
-//         // this.#enemyDying.currentTime = 0;
-//         // this.#enemyDying.play();
-//     }
-// }
-
-// export { SoundManager }

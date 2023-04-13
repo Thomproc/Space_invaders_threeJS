@@ -55,9 +55,8 @@ class World {
     this.#models = new Models(); // Gère les modèles 3D à importer
     this.#IHM = new Interface();
 
-    const callback_menu = () => this.menu();
     const callback_startGame = () => this.startGame();
-    this.#entitiesManager = new EntitiesManager(this.#scene, this.#models, this.#soundManager, this.#IHM, this.#events, this.#loop, this.#camerasManager, callback_menu, callback_startGame); // Gère les entités du jeu
+    this.#entitiesManager = new EntitiesManager(this.#scene, this.#models, this.#soundManager, this.#IHM, this.#events, this.#loop, this.#camerasManager, callback_startGame); // Gère les entités du jeu
     this.#levelsManager = new LevelsManager(this.#scene, this.#loop, this.#entitiesManager, this.#IHM);
 
     this.#events.addEvent(
@@ -67,9 +66,17 @@ class World {
               this.#camerasManager.switchCamera(parseInt(e.key));
               this.#resizer.resize();
           }
+          else if(e.key === "m"){
+            this.#soundManager.enableOrDisableAmbienceMusic() ? this.#IHM.showPopup("Musique d'ambiance activée")
+                                                              : this.#IHM.showPopup("Musique d'ambiance désactivée")
+          }
           else if(e.key === "h"){
             this.#IHM.help();
           }
+          else if(e.key === "Enter" && (this.#IHM.gameIsOver() || this.#IHM.gameIsWin())){
+            this.menu();
+          }
+
       }
     );
     // createControls(this.#camerasManager.getCurrentCamera(), container);
@@ -88,6 +95,7 @@ class World {
   }
 
   menu() {
+    this.#soundManager.ambienceMusic(true);
     this.#gameIsOn = false;
     this.#camerasManager.switchCamera(0);
     this.#resizer.resize();

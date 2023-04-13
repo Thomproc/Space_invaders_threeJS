@@ -18,18 +18,12 @@ class Army {
     #spaceAvailable = config.world.size.depth / 3;
 
     // Propriétés de déplacement
-    #depthSpeedFactor = 1.05
-    #widthSpeedFactor = 1.3
-    #first_depthSpeed = 1
-    #first_widthSpeed = 2
     #depthSpeed
     #widthSpeed
     #widthDirection = 1
 
     // Propriétés d'attaque
-    #shotFreqFactor = 1.2 // Plus ce nombre est élevé, plus les ennemis tireront dans un interval de temps court
-    #first_minNextShot = 2000
-    #first_maxNextShot = 3000;
+    #shotSpeedFactor = 1
     #minNextShot
     #maxNextShot
     #nextShot // Un ennemi au hasard tire dans ... ms
@@ -49,24 +43,27 @@ class Army {
     buildLevel(level){
         this.#gameIsOn = level != 0;
         if(level > 1){
-            this.#widthSpeed *= this.#widthSpeedFactor;
-            this.#depthSpeed *= this.#depthSpeedFactor;
-            this.#minNextShot /= this.#shotFreqFactor;
-            this.#maxNextShot /= this.#shotFreqFactor;
+            this.#widthSpeed = config.army.speed.width * config.army.speed.level_widthFactor * level / 2;
+            this.#depthSpeed = config.army.speed.depth * config.army.speed.level_depthFactor * level / 2;
+            this.#minNextShot = config.army.shot.nextShotInterval.min / (level / 2 * config.army.shot.level_shotFreqFactor);
+            this.#maxNextShot = config.army.shot.nextShotInterval.max / (level / 2 * config.army.shot.level_shotFreqFactor);
+            this.#shotSpeedFactor = config.army.shot.level_shotFreqFactor * level / 2;
         } else if(level == 1){
-            this.#widthSpeed = this.#first_widthSpeed;
-            this.#depthSpeed = this.#first_depthSpeed;
-            this.#minNextShot = this.#first_minNextShot;
-            this.#maxNextShot = this.#first_maxNextShot;
+            this.#widthSpeed = config.army.speed.width;
+            this.#depthSpeed = config.army.speed.depth;
+            this.#minNextShot = config.army.shot.nextShotInterval.min;
+            this.#maxNextShot = config.army.shot.nextShotInterval.max;
+            this.#shotSpeedFactor = 1;
         }
         // Création des bataillons et calcule de la profondeur qu'ils prennent en étant collés
         let enemiesDepthSize = 0; // Somme de l'épaisseur des bataillons pour déterminer ensuite leur espacement
         
+        const callBack_upgradeArmy = () => this.upgrade();
         const armyStructure = config.levels[level].enemies.structure;
         const nbBattalions = armyStructure.length;
         for (let i = 0; i < nbBattalions; i++) {
             const battalionTypes = armyStructure[nbBattalions - i - 1];
-            const battalion = new Battalion(this.#scene, this.#models, this.#sounds, this.#IHM, battalionTypes);
+            const battalion = new Battalion(this.#scene, this.#models, this.#sounds, this.#IHM, battalionTypes, callBack_upgradeArmy);
             enemiesDepthSize += battalion.getSize().z;
             
             this.#battalions.push(battalion);
@@ -146,10 +143,30 @@ class Army {
         });
     }
 
+    // Permet de rendre l'armée plus puissante en augmentant sa vitesse de déplacement, de ses tirs et sa cadence de tir
+    upgrade(){
+        const newWidthSpeed = this.#widthSpeed * config.army.speed.wave_widthFactor;
+        newWidthSpeed > config.army.speed.maxWidth ? this.#widthSpeed = config.army.speed.maxWidth
+                                                   : this.#widthSpeed = newWidthSpeed;
+
+        const newDepthSpeed = this.#depthSpeed* config.army.speed.wave_widthFactor;
+        newDepthSpeed > config.army.speed.maxWidth ? this.#depthSpeed = config.army.speed.maxDepth
+                                                   : this.#depthSpeed = newDepthSpeed;
+
+        const newMinNextShot = this.#minNextShot / config.army.shot.wave_shotFreqFactor;
+        newMinNextShot < config.army.shot.minShot ? this.#minNextShot = config.army.shot.minShot
+                                                   : this.#minNextShot = newMinNextShot;
+        const newMaxNextShot = this.#maxNextShot / config.army.shot.wave_shotFreqFactor;
+        newMaxNextShot < config.army.shot.minShot ? this.#maxNextShot = config.army.shot.minShot
+                                                    : this.#maxNextShot = newMaxNextShot;
+
+        const newShotSpeedFactor = this.#shotSpeedFactor * config.army.shot.wave_speedShotFactor;
+        newShotSpeedFactor > config.army.shot.maxShotSpeedFactor ? this.#shotSpeedFactor = config.army.shot.maxShotSpeedFactor
+                                                     : this.#shotSpeedFactor = newShotSpeedFactor;
+        }
+
     collisionWithEnemy(hitContainer, damage){
         armyBox.setFromObject(this.#armyGroup);
-        // const collisionBoxHelper = new THREE.Box3Helper(bulletBox, 0xffff00);
-        // this.#scene.add(collisionBoxHelper);
         if(hitContainer instanceof THREE.Box3 && armyBox.intersectsBox(hitContainer) || hitContainer instanceof THREE.Sphere && armyBox.intersectsSphere(hitContainer)){
             // Pour chaque battaillon dans mon armée, on regarde s'il y a une collision
             for (let index = 0; index < this.#battalions.length; index++) {
@@ -167,7 +184,7 @@ class Army {
         //Si on tire et qu'on n'a pas encore définit une fonction à appeler selon la fréquence de tir
         if(val && !this.#animationFrameID){
             this.setNextShot();
-            this.#lastShotTime = Date.now() + this.#nextShot;
+            this.#lastShotTime = Date.now();
             this.#animationFrameID = requestAnimationFrame(() => this.shoot());
         }
         //Sinon si on arrete de tirer on supprime l'appel récurent à la fonction "shoot"
@@ -178,7 +195,7 @@ class Army {
     }
 
     setNextShot(){
-        this.#nextShot = Math.random() % (this.#maxNextShot - this.#minNextShot) + this.#minNextShot;
+        this.#nextShot = Math.random() * (this.#maxNextShot - this.#minNextShot) + this.#minNextShot;
     }
 
     shoot(){
@@ -218,7 +235,7 @@ class Army {
         const bulletPosition = new THREE.Vector3().copy(enemy.getPosition());
         bulletPosition.z = this.getPosition().z + battalion.getPosition().z - enemy.getSize().z / 2;
         bulletPosition.x = this.getPosition().x + enemy.getPosition().x;
-        const bullet = new Bullet(this.#scene, "enemy", bulletPosition, config.enemies[enemy.getType()].bulletSpeed, 1);
+        const bullet = new Bullet(this.#scene, "enemy", bulletPosition, config.enemies[enemy.getType()].bulletSpeed * this.#shotSpeedFactor, 1);
         this.#bullets.push(bullet);
     }
 
@@ -265,7 +282,7 @@ class Army {
     }
 
 //// Destructeur
-    delete(){
+    delete(addScore){
         while(this.#bullets.length > 0){
             this.deleteBullet(this.#bullets[0], 0);
         }
@@ -274,10 +291,12 @@ class Army {
             const battalion = this.#battalions[0];
             const enemies = battalion.getEnemies();
             while(enemies.length > 0){
-                const point = enemies[0].getPoint();
-                config.score += point;
-                config.scoreCombo += point;
-                this.#IHM.updateGameScore();
+                if(addScore){
+                    const point = enemies[0].getPoint();
+                    config.score += point;
+                    config.scoreCombo += point;
+                    this.#IHM.updateGameScore();
+                }
                 enemies[0].delete();
                 enemies.splice(0, 1);    
             }

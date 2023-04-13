@@ -10,7 +10,7 @@ class Loop {
   #updatables
   #clock
 
-  #glitchEffect = false
+  #glitchWild = false
 
   constructor(cameraManager, scene, renderer, composer) {
     this.#cameraManager = cameraManager;
@@ -28,8 +28,8 @@ class Loop {
       this.tick();
 
       // render a frame
-      if(this.#glitchEffect){
-        this.#composer.render();
+      if(this.#glitchWild){
+        this.#composer.render(true);
       }
       else {
         this.#renderer.render(this.#scene, this.#cameraManager.getCurrentCamera());
@@ -82,9 +82,9 @@ class Loop {
   }
 
   displayGlitchEffect(){
-    this.#glitchEffect = true;
+    this.#glitchWild = true;
     setTimeout(() => {
-      this.#glitchEffect = false;
+      this.#glitchWild = false;
     }, 500);
   }
 }

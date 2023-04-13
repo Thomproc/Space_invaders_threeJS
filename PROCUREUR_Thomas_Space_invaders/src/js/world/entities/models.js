@@ -108,7 +108,7 @@ class Models {
     
     this.#ship.animation.play();
     this.#ship.animation.timeScale = animationSpeed;
-    this.#ship.mixer.setTime(timeCodes[1]); // Permet d'obtenir le 3ème vaisseau de l'animation dès le lancement du jeu
+    this.#ship.mixer.setTime(timeCodes[1]); // Permet d'obtenir le i ème vaisseau de l'animation dès le lancement du jeu
     this.#ship.animation.paused = true;
     return;
   }
@@ -199,6 +199,14 @@ class Models {
     clonedMixer.setTime(Math.random() * clonedClip.duration);
     const clonedEnemy = {...enemy, model: clonedModel, mixer: clonedMixer};
     return clonedEnemy;
+  }
+
+  getRandomEnemy(){
+    const enemiesTypes =  Object.keys(this.#enemies);
+    const randomType = parseInt(Math.random() * enemiesTypes.length );
+    const enemyType = enemiesTypes[randomType];
+    const enemy = this.getEnemy(enemyType);
+    return enemy;
   }
 
   getEnemySize(){

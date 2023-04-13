@@ -10,17 +10,19 @@ class Battalion {
     #sounds
     #IHM
     #battalionTypes
+    #callBack_upgradeArmy
     
     #battalionGroup = new THREE.Group()
     #enemies = []
 
 
-    constructor(scene, models, sounds, IHM, battalionTypes){
+    constructor(scene, models, sounds, IHM, battalionTypes, callBack_upgradeArmy){
         this.#scene = scene;
         this.#models = models;
         this.#sounds = sounds;
         this.#IHM = IHM;
         this.#battalionTypes = battalionTypes;
+        this.#callBack_upgradeArmy = callBack_upgradeArmy;
 
         this.buildBattalion();
     }
@@ -67,6 +69,7 @@ class Battalion {
             enemy.tick(delta);
             if(enemy.isDead()){
                 this.#enemies.splice(index, 1);
+                this.#callBack_upgradeArmy();
             }
         }
     }

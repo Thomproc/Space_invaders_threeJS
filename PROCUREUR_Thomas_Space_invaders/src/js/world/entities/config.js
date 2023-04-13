@@ -26,7 +26,8 @@ const shipConfig = {
         "expandBoxVector": { //Permet d'affiner la boite de collision
             "x": -0.5,
             "z": -1.7
-        }
+        },
+        "scoreCombo": 200, // comboScore nécessaire pour obtenir ce vaisseau
     },
     "3": {
         "speed": 20,
@@ -38,7 +39,8 @@ const shipConfig = {
         "expandBoxVector": { //Permet d'affiner la boite de collision
             "x": -1.6,
             "z": -4.2        
-        }
+        },
+        "scoreCombo": 550,
     }
 };
 
@@ -65,6 +67,32 @@ const enemiesConfig = {
         "bulletSpeed" : 80
     }
 };
+
+const armyConfig = {
+    "speed": {
+        "maxWidth": 7,
+        "maxDepth": 4, 
+        "width": 3,
+        "depth": 1,
+        "level_widthFactor": 1.1, // Facteur d'amélioration pour la vitesse en largeur en FONCION du niveau
+        "level_depthFactor": 1.05, // Facteur d'amélioration pour la vitesse en profondeur en FONCTION du niveau
+        "wave_widthFactor": 1.07, // Facteur d'amélioration pour la vitesse en largeur au cours d'un niveau
+        "wave_depthFactor": 1.08, // Facteur d'amélioration pour la vitesse en largeur au cours d'un niveau
+    },
+    "shot": {
+        "nextShotInterval": {
+            "min": 1800,
+            "max": 2500
+        },
+        "minShot": 500,
+        "level_shotFreqFactor": 1.4, // Plus ce nombre est élevé, plus l'interval de temps entre 2 tirs sera court après chaque changement de niveau => proportionnel au niveau 
+        "level_speedShotFactor": 1.1, // Permet d'améliorer la vitesse des tirs entre chaque niveau
+        "wave_shotFreqFactor": 1.03, // Plus ce nombre est élevé, plus l'interval de temps entre 2 tirs diminuera au cours du niveau 
+        "wave_shotSpeedFactor": 1.1, // Permet de faire evoluer le facteur augmentant la vitesse des balles ennemis
+        "wave_speedShotFactor": 1.1, // Permet d'améliorer la vitesse des tirs pendant un niveau
+        "maxShotSpeedFactor": 2
+    }
+}
 
 const levelsConfig = {
     0: { // Pas un niveau mais utile pour la présentation des ennemis dans le menu
@@ -111,6 +139,7 @@ const config = {
     "ship": shipConfig,
     "shield": shieldConfig,
     "enemies": enemiesConfig,
+    "army": armyConfig,
     "levels": levelsConfig,
     "highScore": 0,
     "score": 0,

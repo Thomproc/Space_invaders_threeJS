@@ -1,28 +1,50 @@
 import * as THREE from 'three';
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { config } from '../entities/config';
 
+const pi = Math.PI;
 function createLights(scene) {
   const col_light = 0xffffff;
 
-  const light = new THREE.AmbientLight(0x41ff12, 0.4);
-
-  const keyLight = new THREE.DirectionalLight(col_light, 0.8);
-  keyLight.position.set(0, 10, 0);
-  keyLight.target.position.set(0, 0, 0);
+  const ambientLight = new THREE.AmbientLight(0x0f4700, 0.7);
   
-  const fillLight = new THREE.DirectionalLight(col_light, 0.3);
-  fillLight.position.set(-config.world.size.width / 2, 0, 0);
-  fillLight.target.position.set(0, 5, config.world.size.depth / 2);
+  // const fillLight = new THREE.DirectionalLight(col_light, 0.3);
+  // fillLight.position.set(-config.world.size.width / 2, 0, 0);
+  // fillLight.target.position.set(0, 5, config.world.size.depth / 2);
 
-  const backLight = new THREE.DirectionalLight(col_light, 0.3);
-  backLight.position.set(config.world.size.width / 2, 0, 0);
-  backLight.target.position.set(0, 5, config.world.size.depth / 2);
+  // const backLight = new THREE.DirectionalLight(col_light, 0.3);
+  // backLight.position.set(config.world.size.width / 2, 0, 0);
+  // backLight.target.position.set(0, 5, config.world.size.depth / 2);
 
-  const helperKey = new THREE.DirectionalLightHelper(keyLight, 1);
-  const helperFill = new THREE.DirectionalLightHelper(fillLight, 1);
-  const helperBack = new THREE.DirectionalLightHelper(backLight, 1);
+  let intensity = 2;
+  let width = config.world.size.width;
+  let height = config.world.size.depth;
+  const upAreaLigh = new THREE.RectAreaLight(col_light, intensity, width, height);
+  upAreaLigh.position.set(0, 5, config.world.size.depth / 2);
+  upAreaLigh.rotation.x = - pi / 2;
 
-  scene.add(light, keyLight, fillLight, backLight);// helperKey, helperFill, helperBack);
+  intensity = 7
+  const backgroundAreaLight = new THREE.RectAreaLight(col_light, intensity, width, height / 2);
+  backgroundAreaLight.position.set(10, height / 2, config.world.size.depth);
+  backgroundAreaLight.rotation.x = pi + pi / 4;
+
+  intensity = 2
+  height = 10
+  const frontAreaLight = new THREE.RectAreaLight(col_light, intensity, width, height);
+  frontAreaLight.position.set(0, height / 2, -2);
+  frontAreaLight.rotation.x = pi;
+
+  intensity = 1
+  const enemyLightLeft = new THREE.SpotLight(col_light, intensity, config.world.size.depth, pi / 3);
+  enemyLightLeft.position.set(config.world.size.width / 2, 0, 0);
+  enemyLightLeft.target.position.set(0, 0, config.world.size.depth);
+
+  const enemyLightRight = new THREE.SpotLight(col_light, intensity, config.world.size.depth, pi / 3);
+  enemyLightRight.position.set(-config.world.size.width / 2, 0, 0);
+  enemyLightRight.target.position.set(0, 0, config.world.size.depth);
+
+  scene.add(ambientLight, frontAreaLight, upAreaLigh, backgroundAreaLight, 
+            enemyLightLeft, enemyLightLeft.target, enemyLightRight, enemyLightRight.target);
 
 }
 

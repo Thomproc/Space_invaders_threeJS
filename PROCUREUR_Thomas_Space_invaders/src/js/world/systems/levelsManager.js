@@ -1,8 +1,11 @@
+import { config } from "../entities/config"
+
 class LevelsManager {
     #scene
     #loop
     #entitiesManager
     #IHM
+    #levelMax = Object.keys(config.levels).length - 1
 
     #level
     #gameIsOn = false
@@ -30,11 +33,16 @@ class LevelsManager {
             return
         }
         if(this.#entitiesManager.enemiesDied()){
-            this.#loop.pause();
             this.#level++;
-            this.transition();
-            this.#entitiesManager.createShields();
-            this.#entitiesManager.createArmy(this.#level);
+            if(this.#level <= this.#levelMax){
+                // this.#loop.pause();
+                this.transition();
+                this.#entitiesManager.createShields();
+                this.#entitiesManager.createArmy(this.#level);
+            }
+            else {
+                this.victory();
+            }
         }
         else if(this.#entitiesManager.shipDied()){
             this.gameOver();
@@ -54,6 +62,11 @@ class LevelsManager {
 
     gameOver(){
         this.#gameIsOn = false;
+    }
+
+    victory(){
+        this.#gameIsOn = false;
+        this.#entitiesManager.gameWin();
     }
 }
 

@@ -7,7 +7,7 @@ import { Army } from "../entities/army";
 import { Shield } from "../entities/shield";
 
 //Permet de gérer les entités présentes dans le jeu. 
-//Il fait le lien entre les composants sytèmes et les entités
+//Il fait le lien entre les composants sytèmes et les entités voire même entre différentes entités
 
 class EntitiesManager {
     #scene
@@ -20,7 +20,6 @@ class EntitiesManager {
 
     #gameIsOn
 
-    #callback_menu
     #callback_startGame
 
     #environment
@@ -28,7 +27,7 @@ class EntitiesManager {
     #shields = []
     #army
 
-    constructor(scene, models, sounds, IHM, events, loop, camerasManager, callback_menu, callback_startGame){
+    constructor(scene, models, sounds, IHM, events, loop, camerasManager, callback_startGame){
         this.#scene = scene;
         this.#models = models;
         this.#sounds = sounds;
@@ -36,7 +35,6 @@ class EntitiesManager {
         this.#events = events;
         this.#loop = loop;
         this.#camerasManager = camerasManager;
-        this.#callback_menu = callback_menu;
         this.#callback_startGame = callback_startGame;
         
         this.#loop.addUpdatable(this);
@@ -45,6 +43,29 @@ class EntitiesManager {
     gameStart(){
         this.#ship.resetHealth();
     }
+
+    gameWin(){
+        this.deleteShields();
+        this.#ship.deleteBullets();
+        this.#ship.setIsShooting(false);
+        config.score > config.highScore ? config.highScore = config.score : null;
+        this.#sounds.ambienceMusic(false);
+        this.#IHM.showVictory();
+
+        this.#environment.switchToVictory()
+    }
+    
+    gameOver(){
+        this.deleteShields();
+        this.#army.delete(false);
+        this.#ship.deleteBullets();
+        this.#ship.setIsShooting(false);
+        config.score > config.highScore ? config.highScore = config.score : null;
+        this.#IHM.showGameOver();
+        this.#sounds.gameOverSound();
+        this.#sounds.ambienceMusic(false);
+    }
+
 //// Création des entités
     createEnvironment(){
         this.#environment = new Environment(this.#scene, this.#loop, this.#models);
@@ -93,15 +114,25 @@ class EntitiesManager {
         }
     }
 
+    deleteShields(){
+        this.#shields.forEach(shield => {
+            shield.destroy();
+        });
+    }
+
     createArmy(level){
         this.#gameIsOn = level != 0;
         if(this.#army == null){
             const collisionDetection = (bullet) => this.collision_EnemyBullet(bullet);
             this.#army = new Army(this.#scene, this.#models, this.#sounds, this.#IHM, collisionDetection);
         }
+        this.#army.delete();
         this.#army.buildLevel(level);
         if(this.#gameIsOn){
             this.#ship.deleteBullets();
+        }
+        else {
+            this.#environment.switchToGame();
         }
     }
 
@@ -133,7 +164,7 @@ class EntitiesManager {
                                                  : this.#IHM.showPopup("Mode invincible désactivé");
                         break;
                     case 'k':
-                        if(this.#gameIsOn) this.#army.delete();
+                        if(this.#gameIsOn) this.#army.delete(true);
                     default:
                         break;
                 }
@@ -171,7 +202,7 @@ class EntitiesManager {
         if(this.#army.collisionWithEnemy(bulletBox, bullet.getDamage())){
             if(!this.#gameIsOn){
                 this.#loop.pause();
-                this.#army.delete();
+                this.#army.delete(false);
                 this.#ship.resetUpgrade();
                 this.#callback_startGame();
             }
@@ -244,17 +275,10 @@ class EntitiesManager {
         this.#army.setIsShooting(true);
     }
 
-//// Fonction pour connaitre l'état des entités
+//// Méthodes pour connaitre l'état des entités
     shipDied(){
         if(this.#ship.getHealth() <= 0 || this.#army.tooCloseToShip(this.#ship.getBox())){
-            this.#army.delete();
-            this.#shields.forEach(shield => {
-               shield.destroy();
-            });
-            this.#ship.deleteBullets();
-            this.#ship.setIsShooting(false);
-            config.score > config.highScore ? config.highScore = config.score : null;
-            this.#callback_menu();
+            this.gameOver();
             return true;
         }
         return false;

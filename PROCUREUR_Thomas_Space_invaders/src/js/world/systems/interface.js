@@ -13,6 +13,13 @@ class Interface {
     #helpDiv
 
     #popupDiv
+    #nbPopupCalled = 0
+
+    #endScreenDiv
+    #endScreenTitle
+    #endScreenSubTitles
+    #gameIsOver = false
+    #gameIsWin = false
 
     constructor(){
         this.#menuDiv = document.getElementById("menu");
@@ -29,10 +36,19 @@ class Interface {
         this.#helpDiv = document.getElementById("help");
 
         this.#popupDiv = document.getElementById("popup");
+
+        this.#endScreenDiv = document.getElementById("endScreen");
+        this.#endScreenTitle = document.getElementById("endScreenTitle");
+        this.#endScreenSubTitles = document.getElementById("endScreenSubTitles");
     }
 
     showMenuInterface(){
-        this.hideGameInterface();
+        if(this.#gameIsOver){
+            this.hideGameOver();
+        }
+        else if (this.#gameIsWin){
+            this.hideVictory();
+        }
         this.#menuDiv.style.visibility = "visible";
         this.setMenuScores();
     }
@@ -52,6 +68,55 @@ class Interface {
 
     hideGameInterface(){
         this.#scoreGameDiv.style.visibility = "hidden";
+        this.removeLife(true);
+    }
+
+    showEndScreen(HTML_title){
+        this.hideGameInterface();
+
+        this.#endScreenDiv.style.visibility = "visible";
+        this.#endScreenTitle.innerHTML = HTML_title;
+        this.#endScreenDiv.style.animationName = "none";
+        this.#endScreenDiv.offsetHeight; // Force la mise à jour du layout pour que la nouvelle animation soit appliquée
+        this.#endScreenDiv.style.animationName = "grow";
+        
+        this.#endScreenSubTitles.style.visibility = "hidden";
+        this.#endScreenSubTitles.innerHTML =  "High score : " + config.highScore + "<br>" +  "Score : " + config.score + "<p> Appuyer sur <b>ENTREE</b> pour revenir au menu </p>";
+        this.#endScreenDiv.addEventListener("animationend", () => {
+            this.#endScreenSubTitles.style.visibility = "visible";
+        });
+    }
+
+    showGameOver(){
+        const HTML_title = "<b style=\"color:rgb(180, 0, 0)\">Game Over</b>";
+        this.showEndScreen(HTML_title);
+        this.#gameIsOver = true;
+    }
+
+    hideGameOver(){
+        this.#endScreenDiv.style.visibility = "hidden";
+        this.#endScreenSubTitles.style.visibility = "hidden";
+        this.#gameIsOver = false;
+    }
+
+    gameIsOver(){
+        return this.#gameIsOver;
+    }
+
+    showVictory(){
+        const HTML_title = "<b style=\"color:rgb(255, 255, 255)\">Victoire...</b>";
+        this.showEndScreen(HTML_title);
+        this.#gameIsWin = true;
+    }
+
+    hideVictory(){
+        this.#endScreenDiv.style.visibility = "hidden";
+        this.#endScreenSubTitles.style.visibility = "hidden";
+        this.#gameIsWin = false;
+    }
+
+    gameIsWin(){
+        return this.#gameIsWin;
     }
 
     async showInformation(text){
@@ -67,6 +132,17 @@ class Interface {
         this.#informationDiv.innerHTML = "";
     }
 
+    showPopup(text){
+        this.#nbPopupCalled++;
+        this.#popupDiv.innerHTML = text;
+        this.#popupDiv.style.visibility = "visible";
+        setTimeout(() => {
+            this.#nbPopupCalled--;
+            if(this.#nbPopupCalled == 0) this.#popupDiv.style.visibility = "hidden";
+        }, 3000);
+
+    }
+
     showLife(){
         for (let i = 0; i < config.ship.heatlh; i++) {
             let img = document.createElement("IMG");
@@ -75,9 +151,15 @@ class Interface {
         }
     }
 
-    removeLife(){
+    removeLife(all){
         const images = this.#healthDiv.childNodes;
-        images[images.length - 1].remove();
+        if(all){
+            while(images.length > 0){
+                images[0].remove();    
+            }
+        } else {
+            images[images.length - 1].remove();
+        }
     }
 
     setMenuScores(){
@@ -92,15 +174,6 @@ class Interface {
     help(){
         this.#helpDiv.style.visibility == "hidden" ? this.#helpDiv.style.visibility = "visible" 
                                                     : this.#helpDiv.style.visibility = "hidden";
-    }
-
-    showPopup(text){
-        this.#popupDiv.innerHTML = text;
-        this.#popupDiv.style.visibility = "visible";
-        setTimeout(() => {
-            this.#popupDiv.style.visibility = "hidden";
-        }, 3000);
-
     }
 }
 

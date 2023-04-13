@@ -32,7 +32,7 @@ class HealthBar {
 
         // Création de la barre de vie actuelle
         const healthGeometry = new THREE.PlaneGeometry(this.#datas.width * (this.#currentHealth / this.#datas.maxHealth), height);
-        const healthMaterial = new THREE.MeshBasicMaterial({ color: 0x001D33 });
+        const healthMaterial = new THREE.MeshBasicMaterial({ color: 0x37ff00 });
         const health = new THREE.Mesh(healthGeometry, healthMaterial);
 
         // Positionnement de la barre de vie actuelle à l'intérieur de la barre de vie

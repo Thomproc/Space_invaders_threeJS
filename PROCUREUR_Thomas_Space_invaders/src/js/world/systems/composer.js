@@ -14,7 +14,7 @@ class Composer {
         this.#scene = scene;
         this.#camerasManager = camerasManager;
 
-        this.#composer = new EffectComposer( renderer );
+        this.#composer = new EffectComposer( this.#renderer );
         this.addGlitch();
     }
     
@@ -25,9 +25,11 @@ class Composer {
         this.#composer.addPass(glitchPass);
     }
 
-    render(){
+    render(wild){
         this.#composer.passes[0].camera = this.#camerasManager.getCurrentCamera();
-        this.#composer.passes[1].curF = 0;
+        if(wild) {
+            this.#composer.passes[1].curF = 1;
+        }
         this.#composer.render();
     }
 }

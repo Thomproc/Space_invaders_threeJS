@@ -29,7 +29,7 @@ class Enemy {
         this.#meshes = getMeshFromModel(this.#datas.model);
 
         this.#meshes.forEach(mesh => {
-            mesh.material.emissiveIntensity = 1; // Permet de renforcer une couleur de mon material            
+            mesh.material.emissiveIntensity = 2; // Permet de renforcer une couleur de mon material            
         });
         this.#type = type;
 

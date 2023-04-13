@@ -38,7 +38,7 @@ body {
 }
 
 .title b {
-  font-size: 80px;
+  font-size: 100px;
 }
 
 .item {
@@ -62,7 +62,7 @@ body {
   }
   to {
     transform: scale(1.1);
-    color: rgb(197, 0, 0);
+    color: rgb(180, 0, 0);
     text-shadow: 0 0 10px black;
   }
 }
@@ -103,4 +103,48 @@ body {
   padding: 10px;
   font-size: 20px;
   text-align: center;
+}
+
+/* #gameOver {
+  color: rgb(180, 0, 0);
+}
+
+#victory {
+  color: white;
+} */
+
+#endScreen {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: Copperplate, Copperplate Gothic Light, fantasy;
+  font-size: 0;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000, -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000;
+  
+  opacity: 0;
+  animation-name: grow;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes grow {
+  from {
+    font-size: 0;
+    opacity: 0;
+  }
+  to {
+    font-size: 100px;
+    opacity: 1;
+  }
+}
+
+#endScreenSubTitles {
+  text-align: center;
+  font-family: Copperplate, Copperplate Gothic Light, fantasy;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
 }

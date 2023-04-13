@@ -85,10 +85,7 @@ class Ship {
         }
 
         // Le vaisseau s'améliore si le joueur obtient un certains nombre de points sans se faire toucher par les ennemis
-        if(this.#lvl != 2 && config.scoreCombo >= 200){
-            this.upgrade();
-        }
-        else if(this.#lvl != 3 && config.scoreCombo >= 500){
+        if(this.#lvl != 3 && config.scoreCombo >= config.ship[this.#lvl + 1].scoreCombo){
             this.upgrade();
         }
 
@@ -117,11 +114,13 @@ class Ship {
 
     hit(damage){
         if(!this.#invicible){
-            this.#sounds.shipHitSound();
             this.#health -= damage;
-            if(this.#health > 0) this.downgrade();
+            if(this.#health > 0){
+                this.#sounds.shipHitSound();
+                this.downgrade();
+            }
             config.scoreCombo = 0;
-            this.#IHM.removeLife();
+            this.#IHM.removeLife(false);
             this.#IHM.updateGameScore();
             this.#loop.displayGlitchEffect();
         }
