@@ -42,7 +42,7 @@ class SoundManager{
         
         this.#enemyShot = new Audio('src/js/assets/media/enemyShot.mp3');
         this.#enemyShot.load();
-        this.#enemyShot.volume = 0.20;
+        this.#enemyShot.volume = 0.5;
 
         this.#enemyHit = new Audio('src/js/assets/media/enemyHit.mp3')
         this.#enemyHit.load();
