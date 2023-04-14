@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jupi-Terror</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="./src/CSS/space_invaders.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="./favicon_io/site.webmanifest">
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="health"></div>
+    <div id="gameScores"></div>
+    
+    <div id="information" style="visibility: hidden"></div>
+
+    <div id="menu" style="visibility: hidden">
+      <p class="title">
+        <b>Jupi-Terror</b>
+        <br>
+        Procureur Thomas
+        <br>
+        <br>
+        <label class="item">
+        </label>
+        <br>
+        <label class="item"> 
+        </label>
+      </p>
+      <p class="inquietant">
+        <b>Tirer sur un alien pour combattre</b>
+      </p>      
+    </div>
+
+    <div id="endScreen">
+      <p id="endScreenTitle">
+        <p id="endScreenSubTitles"></p>
+      </p>
+    </div>
+
+    <div id="help" style="visibility: visible">
+      <p>
+        <b>Fonctionnalités : </b>
+        <br>
+          &emsp; activer / désactiver la musique d'ambiance : m
+        <br>
+          &emsp; caméra fixe / mobile : 0 / 1
+        <br>
+          &emsp; afficher / masquer cette aide : h
+        <br>
+        <b>Triche : </b>
+        <br>
+          &emsp; mode invincible : i
+        <br>
+          &emsp; tuer tous les ennemis : k
+        <br>
+          &emsp; améliorer / rétrograder le vaisseau : u / d
+      </p>
+    </div>
+
+    <div id="popup" style="visibility: hidden"></div>
+
+    <script type="module" src="./src/js/main.js"></script>
+  </body>
+</html>

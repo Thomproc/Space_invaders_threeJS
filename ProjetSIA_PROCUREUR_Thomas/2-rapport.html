@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Rapport</title>
+        <link rel="stylesheet" href="./rapport/CSS/rapport.css">
+      </head>
+  <body>
+    <div class="headOfBody">
+        <span id="pageHeader">Rapport : Space Invaders 3D</span> 
+        <br>
+        <span id="pageSubHeader">PROCUREUR Thomas</span>
+    </div>
+    <div style="position: relative">
+        <button id="btn_jouer" class="button"> Jouer à Jupi-Terror </button>
+        <script>
+            const button = document.getElementById('btn_jouer');
+            button.addEventListener('click', () => {
+                window.open('./1-space_invaders_3D.html', '_blank');
+            });
+    </script>
+    </div>
+    <h1>Introduction</h1>
+    <hr>
+    Le jeu <b>Jupi-Terror</b> est un clone 3D de Space Invaders réalisé dans le cadre d'un projet en Master 1 Technologie de l'Internet.
+    Ce rapport sert à présenter les <b>fonctionnalités</b>, certains <b>choix</b> de programmation et les <b>problèmes</b> rencontrés lors de sa conception. 
+    Il a été développé via la bibliothèque <b>Three.js</b> en utilisant le navigateur <b>Brave</b> mais tourne aussi sur <b>Microsoft Edge</b>
+    ou encore <b>Chrome</b>, même si les performances étaient moins bonnes de mon côté. Doutant que vous disposiez du navigateur Brave, j'ai adapté
+    la taille de mes polices pour Chrome et Edge ce qui peut expliquer la très petite taille de celles-ci sur Brave.
+    <br>
+
+    <h1>I. Structure du jeu</h1>
+    <hr>
+        <div class="container">
+
+            <h2>I.1. But du jeu</h2>
+                Le joueur contrôle un <b>vaisseau spatial</b> et doit exterminer la totalité des <b>armées extraterrestres</b> venant de Jupiter en leur tirant dessus 
+                avant qu'elles ne l'atteingnent ou détruisent son vaisseau. <br>
+                Un <b>score</b> est incrémenté à chaque ennemi tué afin de pouvoir constater son évolution en le comparant au <b>high score</b>.
+
+
+            <h2>I.2. Menu</h2>
+                <div class="containerWithImage">
+                    <div>
+                        Au démarrage du jeu, l'utilisateur va se retrouver dans le <b>menu d'accueil</b>.
+                        La <b>musique d'ambiance</b> va se lancer et le joueur se retrouvera face à une <b>interface</b> mêlant 
+                        la <b>2D</b> nécessaire à l'affichage d'<b>informations textuelles</b> :
+                        <ul>
+                            <li><b>Titre du jeu</b></li>
+                            <li><b>Nom du développeur</b></li>
+                            <li><b>Meilleur score</b></li>
+                            <li><b>Score</b> réalisé lors de la dernière partie</li>
+                            <li>Indication sur l'<b>évènement attendu</b> pour débuter une partie</li>
+                        </ul>
+                        avec la <b>3D</b> permettant de poser le <b>décor</b> et rendre l'expérience utilisateur plus <b>immersive</b> :
+                        <ul>
+                            <li>Planète <b>Jupiter</b> qui tourne en arrière plan</li>
+                            <li><b>Nuée d'étoiles</b> blanches qui donne une impression de mouvement vers l'avant</li>
+                            <li>Les 3 différents <b>types d'ennemis</b> avec les <b>points</b> qu'ils rapportent</li>
+                            <li><b>Vaisseau</b> du joueur <b>jouable</b></li>
+                        </ul>
+
+                        Il est a noté que dans le menu, certaines <b>fonctionnalités / touches de triche</b> ont été <b>désactivées</b> :
+                        <ul>
+                            <li>Touche <b>1</b> pour passer à la caméra mobile</li>
+                            <li>Touche <b>k</b> pour tuer les ennemis</li>
+                        </ul>
+                    </div>
+                    <div class="image">
+                        <img src="./rapport/images/Accueil.png" class="imgRight" alt="Accueil">
+                    </div>
+                </div>
+                        
+            <h2>I.3. Niveaux</h2>
+                <div class="containerWithImage">
+                    <div>
+                        Losque le premier niveau est lancé, l'<b>interface</b> change afin d'afficher des <b>informations</b> relatives
+                        à la <b>santé</b> du vaisseau et aux <b>points</b> gagnés.
+                        <br>
+                        On retrouve donc le <b>score</b> mais aussi le <b>combo</b> qui correspond au nombre de points accumulés <b>sans être touché</b> par un projectile ennemi.
+                        <br>
+                        Un niveau est composé de <b>3 éléments</b> :
+                        <ul>
+                            <li>Un <b>texte introductif</b> indiquant le <b>niveau</b> auquel le joueur s'apprête à jouer</li>
+                            <li><b>Une armée</b> dont les caractéristiques sont calculées en fonction du niveau</li>
+                            <li><b>Des modules satellites</b> en parfait état</li>
+                        </ul>
+                        Un niveau se <b>termine</b> lorsque les <b>ennemis</b> qui composent l'armée ont été <b>tués</b> ou si le <b>joueur</b> perd toutes ses vies.
+                    </div>
+                    <div class="image">
+                        <img src="./rapport/images/niveau.png" class="imgRight" width="1200px" alt="Accueil">
+                    </div>
+                </div>
+                
+
+            <h2>I.4 Fin de partie</h2>
+                Une <b>animation CSS</b> affiche <b>game over</b> ou <b>victoire</b> selon l'issue de la partie. En cas de victoire, 
+                on peut voir les <b>cadavres</b> de nos ennemis <b>flotter</b> devant leur propre planète ce qui nous pousse
+                à nous demander : <b>qui est le vrai "envahisseur de l'espace" ? </b>
+        </div>
+
+    <h1>II. Entités du jeu</h1>
+    <hr>
+    <div class="container">
+        <h2>II.1. Vaisseau</h2>
+            Le vaisseau est controlable avec les <b>flêches</b> du clavier :
+            <ul>
+                <li>
+                    flêche de <b>gauche</b> : déplace le vaisseau à gauche.
+                </li>
+                <li>
+                    flêche de <b>droite</b> : déplace le vaisseau à droite.
+                </li>
+                <li>
+                    flêche du <b>haut</b> : le vaisseau tire.
+                </li>
+            </ul>
+
+            Il est aussi possible qu'il <b>évolue</b> au cours de la partie ce qui le fait <b>changer d'apparence</b>
+            et <b>améliore ses caractéristiques</b> (vitesse de déplacement, vitesse des projectiles, cadence de tir et dégats).
+            <br>
+            Une évolution est possible lorsque le <b>combo</b> franchit certains paliers prédéfinis :
+                <ul>
+                    <li> La forme <b>1</b> est celle avec laquelle le joueur <b>commence la partie</b>.
+                        Il s'agit du vaisseau avec les performances les plus basses.
+                    </li>
+                    <li> La forme <b>2</b> est disponible quand le <b>combo</b> est supérieur à <b>200</b>. 
+                        Il est davantage rapide dans ses déplacements et tirs mais ne cause pas plus de dégats.
+                    </li>
+                    <li> La forme <b>3</b> est disponible quand le <b>combo</b> est supérieur à <b>500</b>. 
+                        Il s'agit de la forme la plus puissante car toutes les caractéristiques sont évoluées mais 
+                        sa maniabilité trop sensible rend difficile les esquives de projectiles ennemis.
+                    </li>
+                </ul>
+            <br>
+            Dans le cas où le vaisseau rentre en collision avec un tir alien : 
+            <ul>
+                <li>le <b>combo</b> se remet à zéro.</li>
+                <li>le vaisseau <b>perd une vie.</b></li>
+                <li>le vaisseau <b>rétrograde</b> d'un cran si sa forme est supérieure à 1.</li>
+                <li>un effet <b>post processing</b> de glitch se lance</li>
+            </ul>
+            Il est à noter que pendant sa transformation, le vaisseau est invulnérable aux tirs ennemis et tous les objets
+            présents dans la scène sont ralentis. 
+        
+        <h2>II.2. Extraterrestres</h2>
+            Au début de chaque niveau, une armée d'extraterrestres est construite puis ajoutée à la scène. 
+            <br>
+            Il existe <b>3 types d'extraterrestres</b> qui ont des <b>caractéristiques différentes</b> en terme de vitesse de projectile et de points de vie (du plus faible au plus fort): 
+            <ul>
+                <li>observer</li>
+                <li>kamikaze</li>
+                <li>roller</li>
+            </ul>
+            Pou <b>éliminer</b> un ennemi, soit on lui tire dessus jusqu'à <b>vider la jauge de vie</b> au dessus de lui, soit il rentre en <b>collision</b>
+            avec un <b>module satellite</b>, auquel cas les deux entités seront détruites.            
+            <br>
+            La <b>contrepartie</b> de cette élimination est l'<b>évolution</b> du reste de l'armée :
+            <ul>
+                <li>Augmentation de la <b>vitesse de déplacement</b> en largeur et en profondeur</li>
+                <li>Augmentation de la <b>fréquence de tir</b></li>
+                <li>Augmentation de la <b>vitesse des tirs</b></li>
+            </ul>
+            Ces améliorations sont aussi effectuées lors d'un <b>changement de niveau</b> ce qui créé <b>une évolution</b> des ennemis en <b>deux temps</b>. 
+            Ainsi, la <b>puissance initiale</b> de l'armée <b>évolue en fonction des niveaux</b>, 
+            et à partir de cet état elle <b>évolue</b> davantage à mesure que des <b>ennemis meurent</b>.
+
+        <h2>II.3. Modules satellite</h2>
+            Un module satellite est une <b>protection</b> derrière laquelle le vaisseau peut se cacher.
+            Ils sont capables d'<b>encaisser 3 tirs</b> quelconques (allié ou ennemi) voire <b>tuer un ennemi</b> s'il le percute.
+    </div>
+
+    <br>
+    <h1>III. Aspects techniques</h1>
+    <hr>
+    <div class="container">
+        <h2>III.1. Fonctionnalités / touches de triche</h2>
+            Voici les raccourcis clavier pour améliorer l'expérience de jeu :
+            <ul>
+                <li><b>m</b> : activer / désactiver la musique d'ambiance</li>
+                <li><b>h</b> : afficher / masquer l'aide</li>
+                <li><b>0</b> : caméra fixe</li>
+                <li><b>1</b> : caméra mobile</li>
+            </ul>
+            Des touches de triche ont été conçues afin de simplifier la phase de tests :
+            <ul>
+                <li><b>u</b> : améliorer le vaisseau</li>
+                <li><b>d</b> : rétrograder le vaisseau</li>
+                <li><b>i</b> : mode invincible</li>
+                <li><b>k</b> : tuer tous les ennemis</li>
+            </ul>
+
+        <h2>III.2. Animation du vaisseau</h2>
+            Le vaisseau choisi est composé d'une seule animation faisant défiler ses différentes formes. Il m'a donc fallut
+            définir les <b>timecodes</b> pour chaque <b>forme du vaisseau</b> et la <b>durée de chaque sous animation</b>. De ce fait, quand le vaisseau change de forme, 
+            une sous animation est lancée et  
+            on définit un <b>timeout()</b> d'une durée équivalente à celle de la transformation afin qu'à terme, on puisse stopper l'animation.
+            Cependant, des <b>problèmes</b> liés à la performance des PC (ralentissement) pourraient entrainer l'<b>arrêt de l'animation</b> au milieu d'une transformation.
+            C'est pourquoi dans le timeout() on <b>fixe</b> aussi l'animation au <b>timecode</b> de la nouvelle forme du vaisseau.  
+        <br>
+        <h2>III.3. Matérialisation des dégats</h2>
+            <div class="container">
+                <h3>III.3.1. Extraterrestres</h3>
+                    Afin de <b>matérialiser les dégats</b> sur un ennemi, j'ai initialement pensé à utiliser le logiciel <b>Blender</b>
+                    pour créer une <b>animation de dissolution</b> sur leurs textures. L'idée était de lancer cette animation sur un ennemi <b>touché</b> puis
+                    de la stopper <b>proportionnelement</b> à la vie restante.
+                    Elle m'a couté beaucoup de temps de <b>formation</b> pour finalement me rendre compte qu'il était <b>impossible</b> de l'exporter.
+                    C'est pourquoi je me suis finalement rabattu sur une <b>jauge de vie</b> classique.
+                    <img src="./rapport/images/observer_effect.png" class="imgUnder" width="20%" alt="Disparition de l'ennemi"> 
+                    
+                <h3>III.3.2. Modules satellites</h3>
+                    Les <b>dégats</b> subis par un module satellite sont matérialisés par un <b>changement de modèle</b>. En effet, grâce au 
+                    logiciel <b>Blender</b>, j'ai pu construire deux modèles satellites représentant le <b>module initial mais dégradé</b>.
+                    Dans la scène, on a donc pour chaque satellite <b>trois modèles différents superposés</b> et lors d'un <b>impact</b> on rend <b>invisible</b> le
+                    module en meilleur état.
+                    <img src="./rapport/images/modules.png" class="imgUnder" height="200px" alt="Modules satellites dégats"> 
+            </div>
+            
+        <h2>III.4. Gestion des collisions</h2>
+            <div class="container">
+                <h3>III.4.1. Optimisation</h3>
+                    Afin d'optimiser la gestion des collisions et donc éviter de vérifier à chaque frame si un tir allié touche un ennemi,
+                    j'ai choisi de controler dans un premier temps s'il <b>touche l'armée</b>. 
+                    Si c'est le cas, alors on poursuit notre controle pour <b>chaque bataillon</b> d'ennemis (une rangée). 
+                    Enfin si jamais on a une <b>collision avec un bataillon</b>, on vérifie pour <b>chaque ennemi de ce bataillon</b> s'il a été percuté et on agit en conséquence.
+                
+                <h3>III.4.2. Problème rencontré</h3>
+                    En augmentant la <b>vitesse des projectiles</b> du vaisseau, je me suis rendu compte que certains tirs passaient au <b>travers</b> des ennemis les plus fins.
+                    En effet, si a un instant t mon projectile est <b>devant</b> l'ennemi alors à t+1 il passe <b>derrière</b> dans le cas où la <b>distance</b> parcourue par la balle 
+                    est <b>supérieure</b> à l'<b>épaisseur</b> de mon ennemi. Ce problème a été résolu en <b>redimensionnant</b> la hit box de ma balle en fonction de sa vitesse, 
+                    permettant ainsi la détection des collisions entre t et t-1.
+            </div>
+        <br>
+        <h2>III.5. Paramétrage du jeu</h2>
+            Grâce au fichier <b>Config.js</b>, l'ensemble des propriétés <b>relatives aux entités</b> est <b>modifiable</b> permettant ainsi de régler aisément la difficulté du jeu. 
+            De plus, la <b>génération de nouveaux niveaux</b> a été conçue pour être la plus <b>simple</b> possible. 
+            Il s'agit d'un <b>tableau à 2 dimensions</b> prenant pour valeur un <b>type d'ennemi</b> (observer / kamikaze / roller) 
+            ou la valeur <b>null</b> si on souhaite <b>espacer</b> les ennemis.
+            <img src="./rapport/images/army.png" class="imgUnder" height="150px" alt="Modules satellites dégats"> 
+    </div>
+  </body>
+</html>
