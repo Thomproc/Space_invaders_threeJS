@@ -104,7 +104,7 @@ class Interface {
     }
 
     showVictory(){
-        const HTML_title = "<b style=\"color:rgb(255, 255, 255)\">Victoire...</b>";
+        const HTML_title = "<b style=\"color:rgb(255, 255, 255)\">Victoire</b>";
         this.showEndScreen(HTML_title);
         this.#gameIsWin = true;
     }
@@ -147,6 +147,7 @@ class Interface {
         for (let i = 0; i < config.ship.heatlh; i++) {
             let img = document.createElement("IMG");
             img.src = "src/js/assets/images/heart.png";
+            img.style.width = "60px";
             this.#healthDiv.appendChild(img);
         }
     }

@@ -1,5 +1,5 @@
 const worldConfig = {
-    "size" : {"width": 25, "depth": 100}
+    "size" : {"width": 20, "depth": 100}
 };
 
 const shipConfig = {
@@ -80,17 +80,17 @@ const armyConfig = {
         "wave_depthFactor": 1.08, // Facteur d'amélioration pour la vitesse en largeur au cours d'un niveau
     },
     "shot": {
-        "nextShotInterval": {
-            "min": 1800,
+        "nextShotInterval": { // Le prochain tir ennemis sera dans x ms tel que x € [min, max] 
+            "min": 1500,
             "max": 2500
         },
         "minShot": 500,
         "level_shotFreqFactor": 1.4, // Plus ce nombre est élevé, plus l'interval de temps entre 2 tirs sera court après chaque changement de niveau => proportionnel au niveau 
-        "level_speedShotFactor": 1.1, // Permet d'améliorer la vitesse des tirs entre chaque niveau
+        "level_speedShotFactor": 1.2, // Permet d'améliorer la vitesse des tirs entre chaque niveau
         "wave_shotFreqFactor": 1.03, // Plus ce nombre est élevé, plus l'interval de temps entre 2 tirs diminuera au cours du niveau 
         "wave_shotSpeedFactor": 1.1, // Permet de faire evoluer le facteur augmentant la vitesse des balles ennemis
         "wave_speedShotFactor": 1.1, // Permet d'améliorer la vitesse des tirs pendant un niveau
-        "maxShotSpeedFactor": 2
+        "maxShotSpeedFactor": 2 
     }
 }
 
@@ -104,7 +104,7 @@ const levelsConfig = {
     },
     1: { // Armée d'ennemis pour le niveau 1
         "enemies": {
-            "structure": [ // Exemple d'armée en formation triangle -> null permet de spécifier qu'il n'y a aucun enemi mais qu'on souhaite considérer l'espacement
+            "structure": [ // Exemple d'armée en formation triangle -> null permet de spécifier qu'on souhaite un espacement
                 ["observer", null, "kamikaze",  null, "observer"], // Bataillon le plus au fond
                 [null, "kamikaze", null, "kamikaze", null],
                 [null, null, "observer", null, null] // Bataillon le plus en avant

@@ -35,7 +35,6 @@ class LevelsManager {
         if(this.#entitiesManager.enemiesDied()){
             this.#level++;
             if(this.#level <= this.#levelMax){
-                // this.#loop.pause();
                 this.transition();
                 this.#entitiesManager.createShields();
                 this.#entitiesManager.createArmy(this.#level);
@@ -50,13 +49,13 @@ class LevelsManager {
     }
 
     async transition(){
-        await this.#IHM.showInformation("Level " + this.#level);
+        this.#IHM.showInformation("Level " + this.#level);
         setTimeout(
             () => {
                 this.#IHM.hideInformation();
                 this.#loop.resume();
                 this.#entitiesManager.setArmyShot();
-            }, 2000
+            }, 1000
         );
     }
 

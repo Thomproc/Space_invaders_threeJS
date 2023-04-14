@@ -26,7 +26,7 @@ class Bullet {
         if(type == "player"){
             const geometry = new THREE.SphereGeometry(this.#playerBulletradius, 5, 5);
             const material = new THREE.MeshStandardMaterial({
-                color: 0x966100, //0xffd700,
+                color: 0x966100,
                 metalness: 0.9,
                 roughness: 0.2
             });

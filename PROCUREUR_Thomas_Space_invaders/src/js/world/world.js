@@ -26,7 +26,6 @@ class World {
   #resizer
   #events
   #scene
-  #controls
 
   #camerasManager
   #soundManager
@@ -74,6 +73,7 @@ class World {
             this.#IHM.help();
           }
           else if(e.key === "Enter" && (this.#IHM.gameIsOver() || this.#IHM.gameIsWin())){
+            this.#soundManager.ambienceMusic(true);
             this.menu();
           }
 
@@ -95,7 +95,6 @@ class World {
   }
 
   menu() {
-    this.#soundManager.ambienceMusic(true);
     this.#gameIsOn = false;
     this.#camerasManager.switchCamera(0);
     this.#resizer.resize();

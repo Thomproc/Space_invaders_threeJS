@@ -71,10 +71,6 @@ class Loop {
     // only call the getDelta function once per frame!
     const delta = this.#clock.getDelta(); 
 
-    // console.log(
-    //   `The last frame rendered in ${delta * 1000} milliseconds`,
-    // );
-
     
     this.#updatables.forEach((object) => {
       object.tick(delta);

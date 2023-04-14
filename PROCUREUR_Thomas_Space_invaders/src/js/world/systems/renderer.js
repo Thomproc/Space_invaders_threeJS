@@ -11,7 +11,6 @@ function createRenderer() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
   renderer.outputEncoding = THREE.sRGBEncoding;
-  //renderer.physicallyCorrectLights = true;
   return renderer;
 }
 

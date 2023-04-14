@@ -7,14 +7,6 @@ function createLights(scene) {
   const col_light = 0xffffff;
 
   const ambientLight = new THREE.AmbientLight(0x0f4700, 0.7);
-  
-  // const fillLight = new THREE.DirectionalLight(col_light, 0.3);
-  // fillLight.position.set(-config.world.size.width / 2, 0, 0);
-  // fillLight.target.position.set(0, 5, config.world.size.depth / 2);
-
-  // const backLight = new THREE.DirectionalLight(col_light, 0.3);
-  // backLight.position.set(config.world.size.width / 2, 0, 0);
-  // backLight.target.position.set(0, 5, config.world.size.depth / 2);
 
   let intensity = 2;
   let width = config.world.size.width;

@@ -18,6 +18,7 @@ class SoundManager{
     constructor(){
         this.#ambienceMusic = new Audio('src/js/assets/media/ambience.mp3');
         this.#ambienceMusic.load();
+        this.#ambienceMusic.autoplay = true;
         this.#ambienceMusic.loop = true;
 
         this.#gameOver = new Audio('src/js/assets/media/gameOver.mp3');

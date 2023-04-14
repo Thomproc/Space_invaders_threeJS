@@ -16,7 +16,7 @@ body {
     transform: translate(-50%, -50%);
     font-family: Copperplate, Copperplate Gothic Light, fantasy;
     font-weight: bold;
-    font-size: 150px;
+    font-size: 100px;
     text-shadow: 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000, -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000;
     color: white;
 }
@@ -27,18 +27,19 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: Copperplate, Copperplate Gothic Light, fantasy;
-  font-size: 30px;
+  font-size: 25px;
+  text-align: center;
   text-shadow: 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000, -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000;
   color: white;
 }
 
 .title {
   text-align: center;
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .title b {
-  font-size: 100px;
+  font-size: 80px;
 }
 
 .item {
@@ -78,7 +79,7 @@ body {
   top: 10px;
   right: 10px;
   font-family: Copperplate, Copperplate Gothic Light, fantasy;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   color: white;
 }
@@ -88,7 +89,7 @@ body {
   bottom: 10px;
   left: 10px;
   font-family: Copperplate, Copperplate Gothic Light, fantasy;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
 }
 
@@ -101,17 +102,9 @@ body {
   color: #ffffff;
   opacity: 0.9;
   padding: 10px;
-  font-size: 20px;
+  font-size: 15px;
   text-align: center;
 }
-
-/* #gameOver {
-  color: rgb(180, 0, 0);
-}
-
-#victory {
-  color: white;
-} */
 
 #endScreen {
   position: absolute;
@@ -136,7 +129,7 @@ body {
     opacity: 0;
   }
   to {
-    font-size: 100px;
+    font-size: 80px;
     opacity: 1;
   }
 }
@@ -144,7 +137,7 @@ body {
 #endScreenSubTitles {
   text-align: center;
   font-family: Copperplate, Copperplate Gothic Light, fantasy;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   color: white;
 }

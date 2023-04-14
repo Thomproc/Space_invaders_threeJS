@@ -3,14 +3,11 @@ import * as THREE from 'three';
 const pi = Math.PI;
 
 class HealthBar {
-    #scene
     #datas
    
     #currentHealth;
 
-    constructor(scene, width, height, maxHealth, positionY){
-        this.#scene = scene;
-
+    constructor(width, height, maxHealth, positionY){
         this.#datas = {
             "width": width,
             "height": height,

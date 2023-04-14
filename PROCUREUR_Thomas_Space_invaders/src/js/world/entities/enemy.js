@@ -33,7 +33,7 @@ class Enemy {
         });
         this.#type = type;
 
-        this.#healthBar = new HealthBar(this.#scene, this.#datas.size.x, 0.1, config.enemies[this.#type].health, this.#datas.size.y / 1.2);
+        this.#healthBar = new HealthBar(this.#datas.size.x, 0.1, config.enemies[this.#type].health, this.#datas.size.y / 1.2);
 
         this.#enemyGroup.add(this.#datas.model, this.#healthBar.getModel());
     }
@@ -42,11 +42,9 @@ class Enemy {
         this.animate(delta);
         if(this.#isDying){
             const model = this.getModel();
-            // this.#datas.model.position.y -= this.#fallSpeed * delta;
             model.position.z += this.#dyingSpeed * delta;
             
             model.rotation.x += this.#rotationSpeed * delta;
-            // this.#isDead = this.#datas.model.position.y <= -20;
             if(model.position.z > 1.5 * config.world.size.depth){
                 this.delete();
             }
