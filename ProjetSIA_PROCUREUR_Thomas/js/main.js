@@ -1,16 +1,27 @@
-import { World } from './world/world.js';
+import { World } from "./world/world.js";
 
 async function main() {
   // Get a reference to the container element
-  const container = document.querySelector('#app');
-  
-  // create a new world
+  const container = document.querySelector("#app");
+  const loading = document.querySelector("#loading");
+
+  // Create a new world
   const world = new World(container);
 
-  // complete async tasks
-  await world.init();
-  
-  // start the animation loop
+  // Display loading animation
+  loading.style.display = "flex";
+
+  try {
+    // Complete async tasks
+    await world.init();
+  } catch (error) {
+    console.error("Error during initialization:", error);
+  } finally {
+    // Hide loading animation
+    loading.style.display = "none";
+  }
+
+  // Start the animation loop
   world.menu();
 }
 
